@@ -1,7 +1,9 @@
 package com.example.cardapio.controller;
 
 import com.example.cardapio.modelo.Food;
+import com.example.cardapio.repository.FileObRepository;
 import com.example.cardapio.repository.FoodRepository;
+import com.example.cardapio.service.FileDbService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,10 @@ class FoodControllerTest {
 
     @MockBean
     private FoodRepository repository;
+    @MockBean
+    private FileObRepository fileObRepository;
+    @MockBean
+    private FileDbService fileDbService;
 
     @Test
     public void deveTrazerAComidaQuandoElaExistir() throws Exception {
