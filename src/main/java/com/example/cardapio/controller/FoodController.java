@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import resources.FoodRequest;
 
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 
@@ -46,21 +48,11 @@ public class FoodController {
         }
         return mergedList;
     }
-    public static double formatarNumero(double numero) {
-        String numeroSaida = "";
-        String numeroString = String.valueOf(numero);
-        int indexPonto = numeroString.indexOf(".");
-        String parteInteira = numeroString.substring(0, indexPonto);
-        String decimalPart = numeroString.substring(indexPonto + 1);
-        if (indexPonto != -1 && indexPonto < numeroString.length() - 1) {
-            if (decimalPart.length() == 1) {
-                // Transforma em .0numero
-                numeroSaida = parteInteira+".0"+decimalPart;
-            }
-        } else {
-            numeroSaida = parteInteira+".00";
-        }
-        return Double.parseDouble(numeroSaida);
+    public static double formatarPreco(double numero) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        String numeroFormatado = decimalFormat.format(numero);
+        return Double.parseDouble(numeroFormatado.replace(",", "."));
     }
 
     @GetMapping("/food/retornatudo")
@@ -81,7 +73,7 @@ public class FoodController {
         Food food = new Food();
         food.setName(foodRequest.getName());
         food.setDescriptor(foodRequest.getDescriptor());
-        food.setPrice(formatarNumero(foodRequest.getPrice()));
+        food.setPrice(formatarPreco(foodRequest.getPrice()));
 
         return ResponseEntity.status(201).body(this.foodRepository.save(food));
     }
@@ -135,7 +127,7 @@ public class FoodController {
 
             food.setName(foodRequest.getName());
             food.setDescriptor(foodRequest.getDescriptor());
-            food.setPrice(formatarNumero(foodRequest.getPrice()));
+        food.setPrice(formatarPreco(foodRequest.getPrice()));
             foodRepository.save(food);
             return ResponseEntity.ok(food);
         }
